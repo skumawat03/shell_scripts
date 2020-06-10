@@ -1,0 +1,44 @@
+---
+ - hosts: localhost
+   gather_facts: false
+   become: yes
+   become_user: ec2-user
+   vars:
+     pSI:
+   tasks:
+     - name: Destination 
+       set_fact:
+         dest: "/home/ec2-user/deploy"
+
+     - name: checking destination
+       stat:
+         path: "{{dest}}"
+       register: dest_out
+
+     - name: Fail if dest doesnot exist
+       fail:
+         msg: "Error directory {{dest}} doesnot exist"
+       when: dest_out.stat.exists == false
+
+     - name: Source
+       set_fact:
+         src: "/nas/build/java"
+       
+     - name: checking source
+       stat:
+         path: "{{src}}"
+       register: src_out
+       
+     - name: Fail if src doesnot exist
+       fail:
+         msg: "Error directory {{src}} doesnot exist"
+       when: src_out.stat.exists == false
+
+     - name: Copying src to dest
+       copy:
+         src: "{{src}}/conf"
+         dest: "{{dest}}"
+         remote_src: yes
+         mode: preserve
+         force: yes
+       when: src_out.stat.exists

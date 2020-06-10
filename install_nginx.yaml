@@ -1,0 +1,24 @@
+---
+- name: Install nginx
+  hosts: localhost
+  become: true
+
+  tasks:
+  - name: Add epel-release repo
+    yum:
+      name: epel-release
+      state: present
+
+  - include_tasks: install.yaml
+    with_items:
+      - "nginx" 
+
+  - name: Insert Index Page
+    template:
+      src: /home/kumawat/index.html
+      dest: /var/www/html/index.html
+
+  - name: Start NGiNX
+    service:
+      name: nginx
+      state: started
