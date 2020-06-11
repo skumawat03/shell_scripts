@@ -3,14 +3,14 @@
   shell: hostnamectl | grep Operating | awk '{print $3}'
   register: out
 
-- name: Install nginx
+- name: Install {{item}}
   yum:
-    name: nginx
+    name: {{item}}
     state: present
   when: out.stdout == Redhat
 
-- name: Install nginx
+- name: Install {{item}}
   apt:
-    name: nginx
+    name: {{item}}
     state: present
   when: out.stdout == Ubuntu
