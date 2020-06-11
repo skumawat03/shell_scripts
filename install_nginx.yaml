@@ -10,7 +10,7 @@
       - "nginx" 
 
   - name: Insert Index Page
-    template:
+    copy:
       src: /home/kumawat/index.html
       dest: /var/www/html/index.html
 
